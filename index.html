@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARTIFY // High-Res Photo Downloader</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <header>
+        <div class="logo">ARTIFY<span>.</span></div>
+        <nav class="auth-nav">
+            <button id="nav-dash-btn" style="display: none;">My Dashboard</button>
+            <button id="nav-gallery-btn" style="display: none;">Back to Gallery</button>
+            <a href="login.html" id="login-nav-link" class="nav-link">Login</a>
+            <a href="signup.html" id="signup-nav-link" class="nav-link special">Sign Up</a>
+            <button id="logout-btn" style="display: none;">Logout</button>
+        </nav>
+    </header>
+
+    <div id="gallery-view">
+        <section class="hero">
+            <h1>Discover & Download Beautiful Art</h1>
+            <p>Free high-resolution photos curated for creators.</p>
+            <form id="search-form">
+                <input type="text" id="search-input" placeholder="Search wallpapers, nature, textures..." required>
+                <button type="submit">Search</button>
+            </form>
+        </section>
+        <main class="gallery-container">
+            <div id="photo-grid" class="photo-grid"></div>
+        </main>
+        <div class="button-container">
+            <button id="show-more-btn" style="display: none;">Show More</button>
+        </div>
+    </div>
+
+    <div id="dashboard-view" style="display: none;">
+        <section class="hero">
+            <h1>Your Creative Vault</h1>
+            <p>All your previously downloaded high-resolution masterpieces.</p>
+        </section>
+        <main class="gallery-container">
+            <div id="dashboard-grid" class="photo-grid"></div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
