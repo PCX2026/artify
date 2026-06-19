@@ -1,10 +1,11 @@
+// 1. SUPABASE CONFIGURATION (Replace with your actual keys)
 const SUPABASE_URL = "https://lyrafeikpatjvifhavho.supabase.co"; 
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cmFmZWlrcGF0anZpZmhhdmhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MTY0MTcsImV4cCI6MjA5NzM5MjQxN30.PQFoPOBh1zGlq3_FOvqmcZKlGDIw8AzLpiu96rAQu9A";
+const SUPABASE_ANON_KEY = "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cmFmZWlrcGF0anZpZmhhdmhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MTY0MTcsImV4cCI6MjA5NzM5MjQxN30";
 
 // Initializing with a unique variable name to prevent browser naming collisions
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// DOM Elements
+// 2. DOM ELEMENTS
 const photoGrid = document.getElementById('photo-grid');
 const dashboardGrid = document.getElementById('dashboard-grid');
 const searchForm = document.getElementById('search-form');
@@ -20,11 +21,12 @@ const loginNavLink = document.getElementById('login-nav-link');
 const signupNavLink = document.getElementById('signup-nav-link');
 const logoutBtn = document.getElementById('logout-btn');
 
+// Application States
 let currentPage = 1;
 let currentQuery = 'abstract art';
 let currentUser = null;
 
-// Track active Authentication session changes
+// 3. AUTH STATE LISTENER
 supabaseClient.auth.onAuthStateChange((event, session) => {
     currentUser = session?.user || null;
     if (currentUser) {
@@ -41,11 +43,13 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
     }
 });
 
-// --- Pexels Gallery Logic ---
+// 4. PEXELS GALLERY FETCHING LOGIC
 async function loadPhotos(query = 'abstract art', isNewSearch = true) {
     if (isNewSearch) {
         currentPage = 1;
-        currentQuery = query;
+        // Forces query to lowercase so uppercase inputs don't break the backend API routing
+        currentQuery = query.trim().toLowerCase(); 
+        
         photoGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#9ca3af;">Loading inspiration...</p>';
         showMoreBtn.style.display = 'none';
     }
@@ -79,8 +83,10 @@ async function loadPhotos(query = 'abstract art', isNewSearch = true) {
     }
 }
 
+// 5. DOWNLOAD MANAGER (Tracks & downloads image)
 async function handleDownloadAction(imageSrc, fileName, photoId, photographer) {
     if (currentUser) {
+        // Record download history into Supabase database table
         await supabaseClient.from('downloads').insert([{
             user_id: currentUser.id,
             photo_id: photoId,
@@ -88,6 +94,8 @@ async function handleDownloadAction(imageSrc, fileName, photoId, photographer) {
             image_url: imageSrc
         }]);
     }
+    
+    // Force browser to save file directly instead of opening a tab
     try {
         const response = await fetch(imageSrc);
         const blob = await response.blob();
@@ -98,12 +106,13 @@ async function handleDownloadAction(imageSrc, fileName, photoId, photographer) {
         document.body.appendChild(anchor);
         anchor.click();
         document.body.removeChild(anchor);
+        URL.revokeObjectURL(blobUrl);
     } catch (e) {
         window.open(imageSrc, '_blank');
     }
 }
 
-// --- Dashboard Layout Builder ---
+// 6. DASHBOARD MANAGER (Loads user download history)
 async function loadUserDashboard() {
     dashboardGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#9ca3af;">Loading your collection...</p>';
     const { data, error } = await supabaseClient.from('downloads').select('*').order('downloaded_at', { ascending: false });
@@ -128,6 +137,7 @@ async function loadUserDashboard() {
     });
 }
 
+// 7. NAVIGATION CONTROLS
 function switchToDashboard() {
     galleryView.style.display = 'none';
     dashboardView.style.display = 'block';
@@ -143,15 +153,24 @@ function switchToGallery() {
     navDashBtn.style.display = currentUser ? 'inline-block' : 'none';
 }
 
+// 8. EVENT LISTENERS
 if(searchForm) {
-    searchForm.addEventListener('submit', (e) => { e.preventDefault(); const val = searchInput.value.trim(); if(val) loadPhotos(val, true); });
+    searchForm.addEventListener('submit', (e) => { 
+        e.preventDefault(); 
+        const val = searchInput.value.trim(); 
+        if(val) loadPhotos(val, true); 
+    });
 }
 if(showMoreBtn) {
-    showMoreBtn.addEventListener('click', () => { currentPage++; loadPhotos(currentQuery, false); });
+    showMoreBtn.addEventListener('click', () => { 
+        currentPage++; 
+        loadPhotos(currentQuery, false); 
+    });
 }
 
 navDashBtn.addEventListener('click', switchToDashboard);
 navGalleryBtn.addEventListener('click', switchToGallery);
 logoutBtn.addEventListener('click', () => supabaseClient.auth.signOut());
 
+// 9. INITIAL EXECUTION
 loadPhotos();
