@@ -38,7 +38,7 @@
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cmFmZWlrcGF0anZpZmhhdmhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MTY0MTcsImV4cCI6MjA5NzM5MjQxN30.PQFoPOBh1zGlq3_FOvqmcZKlGDIw8AzLpiu96rAQu9A";
         
         // Changed to supabaseClient to bypass global CDN collisions
-        const supabaseClient = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
