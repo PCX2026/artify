@@ -72,8 +72,8 @@ async function loadPhotos(query = 'abstract art', isNewSearch = true) {
         showMoreBtn.style.display = 'none';
     }
     try {
-        const response = await fetch(`/.netlify/functions/get-photos?query=${encodeURIComponent(currentQuery)}&page=${currentPage}`);
-        const data = await response.json();
+// Change from /.netlify/functions/get-photos to:
+const response = await fetch(`/api/get-photos?query=${encodeURIComponent(currentQuery)}&page=${currentPage}`);        const data = await response.json();
         if (isNewSearch) photoGrid.innerHTML = ''; 
 
         if (!data.photos || data.photos.length === 0) {
