@@ -3,59 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artify - Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Artify // Log In</title>
+    <link rel="stylesheet" href="login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col justify-between">
+<body>
 
-    <nav class="flex justify-between items-center px-8 py-4 bg-gray-800 border-b border-gray-700">
-        <a href="index.html" class="text-2xl font-bold tracking-wider text-indigo-400">ARTIFY</a>
-        <div class="space-x-4">
-            <a href="index.html" class="text-gray-300 hover:text-white transition">Gallery</a>
-            <a href="signup.html" class="text-gray-300 hover:text-white transition">Sign Up</a>
-        </div>
-    </nav>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="brand">ARTIFY<span>.</span></div>
+            <h2>Welcome back</h2>
+            <p class="subtitle">Log in to view your download dashboard vault.</p>
 
-    <main class="flex-grow flex items-center justify-center px-4">
-        <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md border border-gray-700">
-            <h2 class="text-3xl font-extrabold text-center mb-6 text-indigo-400">Welcome Back</h2>
-            <form id="login-form" class="space-y-5">
-                <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-1">Email Address</label>
-                    <input type="email" id="email" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:border-indigo-500 text-white" placeholder="you@example.com">
+            <form id="login-form">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="login-email" placeholder="you@example.com" required>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-1">Password</label>
-                    <input type="password" id="password" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:border-indigo-500 text-white" placeholder="••••••••">
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
-                    Sign In
-                </button>
+                <button type="submit" class="auth-btn">Log In</button>
             </form>
-            <p class="text-sm text-gray-400 mt-4 text-center">
-                Don't have an account? <a href="signup.html" class="text-indigo-400 hover:underline">Sign Up</a>
-            </p>
-        </div>
-    </main>
 
-    <footer class="py-4 text-center text-sm text-gray-500 border-t border-gray-800 bg-gray-950">
-        &copy; 2026 Artify Gallery. All rights reserved.
-    </footer>
+            <p class="switch-text">Don't have an account? <a href="signup.html">Sign Up</a></p>
+            <p class="back-home"><a href="index.html">← Back to Gallery</a></p>
+        </div>
+    </div>
 
     <script>
-        // Replace with your actual project credentials
         const SUPABASE_URL = "https://lyrafeikpatjvifhavho.supabase.co"; 
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cmFmZWlrcGF0anZpZmhhdmhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MTY0MTcsImV4cCI6MjA5NzM5MjQxN30.PQFoPOBh1zGlq3_FOvqmcZKlGDIw8AzLpiu96rAQu9A"; 
-
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cmFmZWlrcGF0anZpZmhhdmhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MTY0MTcsImV4cCI6MjA5NzM5MjQxN30.PQFoPOBh1zGlq3_FOvqmcZKlGDIw8AzLpiu96rAQu9A";
+        
+        // Changed to supabaseClient to bypass global CDN collisions
         const supabaseClient = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // Fixed: Grabbing exact input values matching the original IDs
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
 
             const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email: email,
@@ -65,10 +53,7 @@
             if (error) {
                 alert(error.message);
             } else {
-                // Short hold ensures browser LocalStorage saves session before redirecting
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 400);
+                window.location.href = 'index.html';
             }
         });
     </script>
