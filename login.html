@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artify - Login Portal</title>
+    <title>Artify - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -12,8 +12,8 @@
     <nav class="flex justify-between items-center px-8 py-4 bg-gray-800 border-b border-gray-700">
         <a href="index.html" class="text-2xl font-bold tracking-wider text-indigo-400">ARTIFY</a>
         <div class="space-x-4">
-            <a href="index.html" class="text-gray-300 hover:text-white text-sm transition">Gallery</a>
-            <a href="signup.html" class="text-gray-300 hover:text-white text-sm transition">Sign Up</a>
+            <a href="index.html" class="text-gray-300 hover:text-white transition">Gallery</a>
+            <a href="signup.html" class="text-gray-300 hover:text-white transition">Sign Up</a>
         </div>
     </nav>
 
@@ -23,11 +23,11 @@
             <form id="login-form" class="space-y-5">
                 <div>
                     <label class="block text-sm font-medium text-gray-400 mb-1">Email Address</label>
-                    <input type="email" id="login-email" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:border-indigo-500 text-white" placeholder="your-email@domain.com">
+                    <input type="email" id="email" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:border-indigo-500 text-white" placeholder="you@example.com">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-400 mb-1">Password</label>
-                    <input type="password" id="login-password" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:border-indigo-500 text-white" placeholder="••••••••">
+                    <input type="password" id="password" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:border-indigo-500 text-white" placeholder="••••••••">
                 </div>
                 <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
                     Sign In
@@ -39,21 +39,23 @@
         </div>
     </main>
 
-    <footer class="py-4 text-center text-sm text-gray-600 border-t border-gray-800 bg-gray-950">
+    <footer class="py-4 text-center text-sm text-gray-500 border-t border-gray-800 bg-gray-950">
         &copy; 2026 Artify Gallery. All rights reserved.
     </footer>
 
     <script>
-        // Insert your precise credentials below
+        // Replace with your actual project credentials
         const SUPABASE_URL = "https://lyrafeikpatjvifhavho.supabase.co"; 
-        const SUPABASE_ANON_KEY = "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cmFmZWlrcGF0anZpZmhhdmhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MTY0MTcsImV4cCI6MjA5NzM5MjQxN30"; 
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cmFmZWlrcGF0anZpZmhhdmhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MTY0MTcsImV4cCI6MjA5NzM5MjQxN30.PQFoPOBh1zGlq3_FOvqmcZKlGDIw8AzLpiu96rAQu9A"; 
 
         const supabaseClient = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
+            
+            // Fixed: Grabbing exact input values matching the original IDs
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
 
             const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email: email,
@@ -63,7 +65,7 @@
             if (error) {
                 alert(error.message);
             } else {
-                // Wait briefly to allow session sync to finish inside the browser cache
+                // Short hold ensures browser LocalStorage saves session before redirecting
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 400);
